@@ -25,19 +25,16 @@ module tb_jitter(
     reg m00_axis_aclk;
     localparam real AXI_CLK_FREQ = 100000000;
     localparam real AXI_CLK_PERIOD = 1000000000/AXI_CLK_FREQ;    
-    
-	localparam JITTER = 5; //MIN/MAX VALUE
-    integer seed = 2;
-	
-	
+    localparam JITTER_PS = 50;        
     
     initial begin       
         m00_axis_aclk = 0;
-       // forever #(AXI_CLK_PERIOD/2 + $random %(JITTER)) m00_axis_aclk = ~m00_axis_aclk;                 
-        forever #(AXI_CLK_PERIOD/2 + $dist_uniform(seed,-JITTER,JITTER)/100.0) m00_axis_aclk = ~m00_axis_aclk;                 
-    end    
-    
-endmodule
+       //forever #(AXI_CLK_PERIOD/2) m00_axis_aclk = ~m00_axis_aclk;                 
+        //forever #(AXI_CLK_PERIOD/2 + $dist_uniform(seed,-JITTER,JITTER)/100.0) m00_axis_aclk = ~m00_axis_aclk;
+        forever begin            
+            #(AXI_CLK_PERIOD/2 +  $itor($random%(JITTER_PS))/$itor(1000)) m00_axis_aclk = ~m00_axis_aclk;
+        end                 
+    end
 		 
 
 endmodule
